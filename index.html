@@ -1626,6 +1626,25 @@ input[type=range].demo-range{width:100%;accent-color:var(--lime);min-height:32px
     var estLabels={950:'Portfolio — up to 3 pages ($475, was $950)',1500:'Business — up to 5 pages ($750, was $1,500)',2750:'Growth — up to 10 pages + blog ($1,375, was $2,750)',3500:'Commerce / Custom — store or custom build (from $1,750, was $3,500)'};
     var baseSel=document.getElementById('basePkg');
     if(baseSel){ for(var i=0;i<baseSel.options.length;i++){ var v=parseInt(baseSel.options[i].value,10); if(estLabels[v]) baseSel.options[i].text=estLabels[v]; } }
+    // Contact form "WHAT ARE YOU INTERESTED IN?" dropdown: sale prices
+    // (native <option> text cannot render <s>, so the "was $X" form).
+    // The data-pkg attributes are rewritten to the SAME strings through
+    // this map, so the prefill match (option.text === data-pkg) keeps
+    // working — a click on "Start with Business" still selects Business.
+    // Audit / Care plan / "Not sure" options are not in the map and are
+    // never touched. After Dec 1 this block never runs and the static
+    // regular-price options and data-pkg values stay as written.
+    var fPkgLabels={
+      'Portfolio — $950':'Portfolio — $475 (was $950)',
+      'Business — $1,500':'Business — $750 (was $1,500)',
+      'Growth — $2,750':'Growth — $1,375 (was $2,750)',
+      'Commerce / Custom — from $3,500':'Commerce / Custom — from $1,750 (was $3,500)'
+    };
+    var fSel=document.getElementById('fPkg');
+    if(fSel){ for(var i=0;i<fSel.options.length;i++){ var t=fSel.options[i].text; if(fPkgLabels[t]) fSel.options[i].text=fPkgLabels[t]; } }
+    document.querySelectorAll('[data-pkg]').forEach(function(el){
+      var v=el.getAttribute('data-pkg'); if(fPkgLabels[v]) el.setAttribute('data-pkg',fPkgLabels[v]);
+    });
     // Quote form note ("Commerce / Custom quotes show from $3,500").
     var fromNote=document.getElementById('quoteFromNote');
     if(fromNote) fromNote.textContent=fromNote.textContent.replace('from $3,500','from $1,750');
